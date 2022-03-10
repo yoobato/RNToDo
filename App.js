@@ -20,9 +20,9 @@ export default function App() {
 
     // 새로운 ToDo를 추가할 때, toDos state를 직접 수정할 수 없다.
     // 따라서, Object.assign을 써서 두 개의 Object를 합친 새로운 Object를 만든다.
-    // ToDo object는 현재 일시를 key로 갖고, text와 work를 value로 가진다.
+    // ToDo object는 현재 일시를 key로 갖고, text와 working을 value로 가진다.
     const newToDos = Object.assign({}, toDos, {
-      [Date.now()]: { text, work: working }
+      [Date.now()]: { text, working }
     });
     // 아래처럼 ES6 문법을 사용할 수도 있다.
     // const newToDos = {
@@ -69,9 +69,11 @@ export default function App() {
       />
       <ScrollView>
         {Object.keys(toDos).map(key => (
-          <View key={key} style={styles.toDo}>
-            <Text style={styles.toDoText}>{toDos[key].text}</Text>
-          </View>
+          toDos[key].working === working ? (
+            <View key={key} style={styles.toDo}>
+              <Text style={styles.toDoText}>{toDos[key].text}</Text>
+            </View>
+          ) : null
         ))}
       </ScrollView>
     </View>
