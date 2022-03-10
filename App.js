@@ -7,6 +7,11 @@ import { theme } from './colors';
 
 const STORAGE_KEY = '@toDos';
 
+// TODO: Code Challenge
+// TODO: (1) Work, Travel 중에 종료된 곳에서 시작 (AsyncStorage
+// TODO: (2) TODO Completed 추가 (아이콘 추가)
+// TODO: (3) TODO Text 수정 기능 추가 (아이콘 추가, 수정하는 동안 TextInput으로 교체해서 보여주자?)
+
 export default function App() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState('');
