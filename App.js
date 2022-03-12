@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Fontisto } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from './colors';
@@ -71,21 +71,31 @@ export default function App() {
   };
 
   const deleteToDo = (key) => {
-    Alert.alert('Delete To Do?', 'Are you sure?', [
-      { text: 'Cancel' },
-      {
-        text: "I'm sure",
-        onPress: async () => {
-          const newToDos = { ...toDos };
-          // 아직 state가 되지 않았기 때문에 mutate 가능
-          delete newToDos[key];
+    if (Platform.OS === 'web') {
+      const ok = confirm('Do you want to delete this To Do?');
+      if (ok) {
+        const newToDos = { ...toDos };
+        delete newToDos[key];
+        setToDos(newToDos);
+        saveToDos(newToDos);
+      }
+    } else {
+      Alert.alert('Delete To Do?', 'Are you sure?', [
+        { text: 'Cancel' },
+        {
+          text: "I'm sure",
+          onPress: async () => {
+            const newToDos = { ...toDos };
+            // 아직 state가 되지 않았기 때문에 mutate 가능
+            delete newToDos[key];
 
-          setToDos(newToDos);
-          await saveToDos(newToDos);
+            setToDos(newToDos);
+            await saveToDos(newToDos);
+          },
+          style: 'destructive',   // iOS Only
         },
-        style: 'destructive',   // iOS Only
-      },
-    ]);
+      ]);
+    }
   };
 
   return (
@@ -95,7 +105,8 @@ export default function App() {
         <TouchableOpacity onPress={work}>
           <Text 
             style={{ 
-              ...styles.btnText, 
+              fontSize: 38,
+              fontWeight: '600',
               color: working ? 'white' : theme.grey 
             }}
           >
@@ -105,7 +116,8 @@ export default function App() {
         <TouchableOpacity onPress={travel}>
         <Text 
             style={{ 
-              ...styles.btnText, 
+              fontSize: 38,
+              fontWeight: '600',
               color: !working ? 'white' : theme.grey 
             }}
           >
@@ -147,10 +159,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 100,
-  },
-  btnText: {
-    fontSize: 38,
-    fontWeight: '600',
   },
   input: {
     backgroundColor: 'white',
